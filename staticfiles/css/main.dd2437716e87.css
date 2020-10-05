@@ -1,0 +1,23 @@
+body {
+ background: #649dfa;
+}
+
+.container {
+background: #ffffff;
+margin-bottom: 50px;
+margin-top: 50px;
+padding: 25px;
+text-align: center;
+border-style: solid;
+}
+
+
+
+.row {
+text-align: center;
+
+}
+
+#myChart {
+margin: 0 auto
+}

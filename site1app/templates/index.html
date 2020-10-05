@@ -1,0 +1,91 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+
+   <link rel="stylesheet" href="{% static 'css/normalize.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/skeleton.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+
+
+<body>
+
+
+
+<div class="container">
+<h1> Live Data Today</h1>
+
+<div class="row">
+    <div class="hello">
+
+                <canvas id="myChart" width="350" height="350"></canvas>
+
+                    <script>
+                                var ctx = document.getElementById('myChart').getContext('2d');
+
+                                var myChart = new Chart(ctx, {
+                                    type: 'doughnut',
+                                    data: {
+                                        labels: ["Ok", "Fail"],
+
+
+                                        datasets: [{
+                                            label: 'Breakdown',
+                                            data: [
+
+                                            {% for number in numbers_from_saf_defect_table %}
+                                            {{number.saf_number_in_table}},
+                                            {{number.defect_number_in_table}}
+                                            {% endfor %}
+
+                                            ],
+
+                                            backgroundColor: ['#49A9EA', '#36CAAB', '#PGA1ZA'],
+                                            borderWidth: 1
+                                        }]
+                                    },
+
+                                    options: {
+
+                                            title: {
+                                                display: true,
+                                                text: 'Number of faults'
+                                            },
+
+                                            responsive: false,
+
+                                    }
+                                });
+                    </script>
+
+        </div>
+
+
+
+    <input type="button" value="Generate live report" onclick="window.open('making_a_doc')">
+
+  </div>
+</div>
+
+
+
+
+
+
+</body>
+
+
+</html>
