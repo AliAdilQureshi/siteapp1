@@ -111,3 +111,62 @@ def making_a_doc_function(request):
 # return render(request, 'doc.html', response)
 
 # ----------------end of section 2--------------------------------------------
+
+
+import docx2pdf
+from django.shortcuts import render
+from docx import Document
+
+def making_a_doc_with_doc_function(request):
+# letters = string.ascii_lowercase
+#     result_str = ''.join(random.choice(letters) for i in range(length))
+#     print("Random string of length", length, "is:", result_str)
+#plot from uploaded data now need to make chart from live data that has been uploaded to the site. this will be done by either doing pandas crunching all over again to get the numbers that you want or by reading numbers tht have already been put in one of the tables. most ikley a combination of both
+
+    doc = docx.Document()
+    pk = 3
+    if not saf_defect_table.objects.filter(pk=pk).exists(): #this accesses the saf_defect_table
+        doc.add_heading("no text")
+        doc.save('thisisdoc.docx')
+    else:
+        saf_defect_table_variable = saf_defect_table.objects.get(pk=pk)
+
+        doc.add_heading(str(saf_defect_table_variable.saf_number_in_table))
+        doc.add_heading(str(saf_defect_table_variable.defect_number_in_table))
+
+        #making a plot from a csv file that was uploaded to DB table
+        if FileUpload.objects.filter(attribution_file_upload='pftest4.csv').exists():
+            life3 = pd.read_csv(FileUpload.objects.get(attribution_file_upload='pftest4.csv').attribution_file_upload)
+            life3.plot(kind='bar', x='status', y='item')
+            plt.title('my plot title')
+            plt.xlabel('years')
+            plt.ylabel('Age')
+            memfile = io.BytesIO() #this is needed in order to save the file to a temporary memory section
+            plt.savefig(memfile)
+            doc.add_picture(memfile, width=Inches(4))
+            memfile.close()
+            plt.clf()  #this shuts down the plot so then you can make a new.
+
+        #making a plot out of numbers that are already stored in saf defect table DB table
+        y1 = saf_defect_table_variable.saf_number_in_table
+        y2 = saf_defect_table_variable.defect_number_in_table
+        korea_scores = (y1, y2)
+        col_count = 2
+        bar_width = .2
+        index = np.arange(col_count)
+        plt.barh(index, korea_scores, bar_width, alpha=.4, label="Korea")
+        memfile2 = io.BytesIO()
+        plt.savefig(memfile2)
+        doc.add_picture(memfile2, width=Inches(4))
+        memfile2.close()
+
+
+    doc.save('thisisdoc.docx')
+
+
+    #converting the generated docx into a pdf file
+    pdf = open('thisisdoc.docx', 'rb')
+    response = FileResponse(pdf)
+
+   # Report_File_Upload_Table.objects.create(generated_report_file_upload=output.pdf)
+    return response
