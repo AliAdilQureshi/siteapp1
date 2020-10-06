@@ -2,7 +2,7 @@
 
 from django.shortcuts import render
 from .models import FileUpload, saf_defect_table
-from .main import making_a_doc_function
+from .main import making_a_doc_function, making_a_doc_with_doc_function
 
 
 # Create your views here.
@@ -24,3 +24,6 @@ def making_the_doc(request):
     return making_a_doc_function(request)
 
 
+def making_the_document(request):
+
+    return making_a_doc_with_doc_function(request)
